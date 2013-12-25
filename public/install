@@ -41,6 +41,7 @@ fi
 
 if [ $? != 0 ]; then
   echo "Unable to download $URL"
+  exit 1
 fi
 
 gunzip -c $FILE | tar xvf - && mv exercism /usr/local/bin
