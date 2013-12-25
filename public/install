@@ -13,6 +13,7 @@ latest() {
 }
 
 VERSION="$(latest)"
+
 if [ "$(uname -m)" == "x86_64" ]; then
   FILE="exercism-darwin-amd64.tgz"
 else
@@ -22,9 +23,18 @@ fi
 cd /tmp
 
 URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
-wget $URL
+
+if type curl &>/dev/null; then
+  curl -O $URL
+elif type wget &>/dev/null; then
+  wget $URL
+else
+  echo "error: please install \`curl\` or \`wget\` and try again" >&2
+  exit 1
+fi
+
 if [ $? != 0 ]; then
   echo "Unable to download $URL"
 fi
 
-gunzip -c $FILE | tar -xvf - && mv exercism /usr/local/bin
+gunzip -c $FILE | tar xvf - && mv exercism /usr/local/bin
