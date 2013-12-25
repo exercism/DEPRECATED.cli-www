@@ -16,7 +16,7 @@ VERSION="$(latest)"
 if [ "$(uname -m)" == "x86_64" ]; then
   FILE="exercism-darwin-amd64.tgz"
 else
-  FILE="exercism-darwin-i386.tgz"
+  FILE="exercism-darwin-386.tgz"
 fi
 
 cd /tmp
