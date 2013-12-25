@@ -1,0 +1,30 @@
+#!/bin/bash
+
+strip_leading() {
+  sed -e 's/https:\/\/github.com\/exercism\/cli\/releases\/tag\///'
+}
+
+ask_github() {
+  curl --head --silent https://github.com/exercism/cli/releases/latest
+}
+
+latest() {
+  ask_github | grep Location | awk '{print $2}' | strip_leading | tr -d '\r'
+}
+
+VERSION="$(latest)"
+if [ "$(uname -m)" == "x86_64" ]; then
+  FILE="exercism-darwin-amd64.tgz"
+else
+  FILE="exercism-darwin-i386.tgz"
+fi
+
+cd /tmp
+
+URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
+wget $URL
+if [ $? != 0 ]; then
+  echo "Unable to download $URL"
+fi
+
+gunzip -c $FILE | tar -xvf - && mv exercism /usr/local/bin
