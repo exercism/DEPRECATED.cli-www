@@ -14,10 +14,16 @@ latest() {
 
 VERSION="$(latest)"
 
-if [ "$(uname -m)" == "x86_64" ]; then
-  FILE="exercism-darwin-amd64.tgz"
+if [ "$(uname -s)" == "Darwin" ]; then
+  OS="darwin"
 else
-  FILE="exercism-darwin-386.tgz"
+  OS="linux"
+fi
+
+if [ "$(uname -m)" == "x86_64" ]; then
+  FILE="exercism-$OS-amd64.tgz"
+else
+  FILE="exercism-$OS-i386.tgz"
 fi
 
 cd /tmp
