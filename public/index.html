@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>  <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>  <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>  <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Exercism Command-Line Client</title>
+    <meta name="description" content="Interfacing with Exercism">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header id="section-header" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <!-- Menu button that shows for <768px viewport width -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand visible-xs" href="#">Exercism.io</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+          <ul class="nav navbar-nav">
+            <li><a href="http://exercism.io">exercism.io</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section id="section-content">
+
+      <div id="content-first" class="content-heading">
+        <div class="container container-narrow">
+          <a href="http://exercism.io" class="sprite-logo-medium pull-left">Exercism</a>
+          <h1 class="pull-left">The Exercism Command-Line Client</h1>
+        </div>
+      </div>
+
+      <div id="content-second">
+
+        <article class="first">
+          <div class="container container-narrow">
+            <h2>About the CLI</h2>
+            <p><code>exercism</code> is a command line tool to interact with <a href="http://exercism.io">exercism.io</a>.</p>
+            <p>It is written in Go, but you do not need to install Go (or any other language) in order to use it.</p>
+            <p>Download the <a href="https://github.com/exercism/cli/releases/latest">latest release</a> and place the binary in your <code>PATH</code>.</p>
+          </div>
+        </article>
+
+        <article>
+          <div class="container container-narrow">
+            <h2>Basic Usage</h2>
+
+            <h3>Configuration</h3>
+            <p>You need to tell the gem who you are and where to put the exercises that it will download:</p>
+<pre class="content-code">
+  $ exercism login
+</pre>
+            <p>This will ask you for your github username, your exercism API key, and the location on your filesystem where you would like the exercises to be downloaded to.</p>
+
+            <h3>Downloading Exercises</h3>
+            <p>You download exercises with the <kbd>fetch</kbd> command.</p>
+
+<pre class="content-code">
+  $ exercism fetch
+</pre>
+
+            <p>The first time you run the command, it will download the first exercise in each language. After that, it will download any exercises that you are currently working on, plus the next available exercise that you have not yet submitted any code to.</p>
+
+            <p>You can download a particular exercise in a given language by specifying the language and exercise to <kbd>fetch</kbd>:</p>
+
+<pre class="content-code">
+  $ exercism fetch ruby food-chain
+</pre>
+
+            <h3>Submitting Exercises</h3>
+            <p>To submit an exercise, use the <kbd>submit</kbd> command.</p>
+
+<pre class="content-code">
+  $ exercism submit path/to/file.ext
+</pre>
+            <p>You only need to submit the code you wrote to solve the exercise, not the test suite that you were given. At the moment each exercise must be solved in a single file.</p>
+          </div>
+        </article>
+
+        <article class="last">
+          <div class="container container-narrow">
+            <h2>Troubleshooting</h2>
+            <p>Which version of the CLI are you using?</p>
+
+<pre class="content-code">
+  $ exercism -v
+</pre>
+            <p>If this is not the latest version, try <a href="https://github.com/exercism/cli/releases/latest">upgrading</a>.</p>
+
+            <p>If upgrading doesn't change the version, make sure that you are running the correct program (not the deprecated ruby gem):</p>
+
+<pre class="content-code">
+  $ which exercism
+</pre>
+
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <footer id="section-footer">
+      <div class="container text-center">
+        <p>
+          <a class="sprite-brand" href="http://exercism.io">Exercism.io</a>
+          <span class="text-line">
+            &copy; 2013 Katrina Owen / Source: <a href="http://github.com/exercism/cli">github.com/exercism/cli</a>.
+          </span>
+          <span class="text-line">
+            Report bugs and submit feedback on <a href="htp://github.com/exercism/cli/issues">GitHub</a>. Email me at <a href="mailto:kytrinyx@exercism.io">kytrinyx@exercism.io</a>.
+          </span>
+        </p>
+      </div>
+    </footer>
+
+  </body>
+</html>
