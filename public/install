@@ -34,8 +34,6 @@ latest() {
   ask_github | filter_location | filter_tag
 }
 
-VERSION="$(latest)"
-
 archive_os() {
   case "$(uname -s)" in
   Darwin) echo "darwin" ;;
@@ -54,12 +52,6 @@ archive() {
   echo "exercism-$(archive_os)-$(archive_arch).tgz"
 }
 
-FILE="$(archive)"
-
-cd /tmp
-
-URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
-
 if type curl &>/dev/null; then
   setup_curl
 elif type wget &>/dev/null; then
@@ -69,6 +61,10 @@ else
   exit 1
 fi
 
+VERSION="$(latest)"
+FILE="$(archive)"
+URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
+cd /tmp
 get $URL
 
 if [ $? != 0 ]; then
