@@ -4,11 +4,17 @@ setup_curl() {
   head() {
     curl --head --silent "$@"
   }
+  get() {
+    curl -LOk "$@"
+  }
 }
 
 setup_wget() {
   head() {
     wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
+  }
+  get() {
+    wget "$@"
   }
 }
 
