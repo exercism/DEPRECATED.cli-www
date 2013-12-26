@@ -5,7 +5,7 @@ setup_curl() {
     curl --head --silent "$@"
   }
   get() {
-    curl -LOk "$@"
+    curl --insecure --location --remote-name "$@"
   }
 }
 
