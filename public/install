@@ -1,7 +1,7 @@
 #!/bin/bash
 
-strip_leading() {
-  sed -e 's/https:\/\/github.com\/exercism\/cli\/releases\/tag\///'
+filter_tag() {
+  xargs basename
 }
 
 ask_github() {
@@ -9,7 +9,7 @@ ask_github() {
 }
 
 latest() {
-  ask_github | grep Location | awk '{print $2}' | strip_leading | tr -d '\r'
+  ask_github | grep Location | awk '{print $2}' | filter_tag | tr -d '\r'
 }
 
 VERSION="$(latest)"
