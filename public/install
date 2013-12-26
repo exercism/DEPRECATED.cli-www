@@ -61,13 +61,15 @@ cd /tmp
 URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
 
 if type curl &>/dev/null; then
-  curl -LOk $URL
+  setup_curl
 elif type wget &>/dev/null; then
-  wget $URL
+  setup_wget
 else
   echo "error: please install \`curl\` or \`wget\` and try again" >&2
   exit 1
 fi
+
+get $URL
 
 if [ $? != 0 ]; then
   echo "Unable to download $URL"
