@@ -49,7 +49,7 @@ archive_os() {
 archive_arch() {
   case "$(uname -m)" in
   x86_64) echo "amd64" ;;
-  *)      echo "i386" ;;
+  *)      echo "386" ;;
   esac
 }
 
