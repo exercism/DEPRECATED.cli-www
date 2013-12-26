@@ -1,5 +1,10 @@
 #!/bin/bash
 
+fail() {
+  echo "$@" >&2
+  exit 1
+}
+
 setup_curl() {
   head() {
     curl --head --silent "$@"
@@ -57,27 +62,18 @@ if type curl &>/dev/null; then
 elif type wget &>/dev/null; then
   setup_wget
 else
-  echo "error: please install \`curl\` or \`wget\` and try again" >&2
-  exit 1
+  fail "error: please install \`curl\` or \`wget\` and try again"
 fi
 
 VERSION="$(latest)"
 FILE="$(archive)"
 URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
 cd /tmp
-get $URL
+get $URL ||
+fail "Unable to download $URL"
 
-if [ $? != 0 ]; then
-  echo "Unable to download $URL"
-  exit 1
-fi
-
-tar zxvf $FILE
-
-if [ $? != 0 ]; then
-  echo "Failed to unpack $FILE"
-  exit 1
-fi
+tar zxvf $FILE ||
+fail "Failed to unpack $FILE"
 
 if [ -d /usr/local/bin ]; then
   if [ -w /usr/local/bin ]; then
