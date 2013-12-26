@@ -27,19 +27,17 @@ latest() {
 VERSION="$(latest)"
 
 archive_os() {
-  if [ "$(uname -s)" == "Darwin" ]; then
-    echo "darwin"
-  else
-    echo "linux"
-  fi
+  case "$(uname -s)" in
+  Darwin) echo "darwin" ;;
+  *)      echo "linux" ;;
+  esac
 }
 
 archive_arch() {
-  if [ "$(uname -m)" == "x86_64" ]; then
-    echo "amd64"
-  else
-    echo "i386"
-  fi
+  case "$(uname -m)" in
+  x86_64) echo "amd64" ;;
+  *)      echo "i386" ;;
+  esac
 }
 
 archive() {
