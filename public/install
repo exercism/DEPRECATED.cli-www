@@ -51,4 +51,35 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-mv exercism /usr/local/bin
+if [ -d /usr/local/bin ]; then
+  if [ -w /usr/local/bin ]; then
+    mv exercism /usr/local/bin/
+  fi
+fi
+
+if [ ! -f /usr/local/bin/exercism ]; then
+  # OK. Trying something else.
+  # This might be considered slightly impolite.
+  if [ ! -d $HOME/bin ]; then
+    mkdir $HOME/bin
+  fi
+  mv exercism $HOME/bin/
+
+  if [ $? != 0 ]; then
+    echo "Unable to figure out where to put the binary"
+    echo "Please submit an issue so we can improve the script: https://github.com/exercism/cli-www/issues"
+    exit 1
+  fi
+fi
+
+if [ ! $(echo $PATH | grep "$HOME/bin") ]; then
+  if [ ! $(echo $PATH | grep "~/bin") ]; then
+    # Add ~/bin to the PATH
+    if [ -f $HOME/.bash_profile ]; then
+      echo 'export PATH=$HOME/bin:$PATH' >> $HOME/.bash_profile
+    fi
+    if [ -f $HOME/.zshrc ]; then
+      echo 'export PATH=$HOME/bin:$PATH' >> $HOME/.zshrc
+    fi
+  fi
+fi
