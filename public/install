@@ -1,55 +1,79 @@
 #!/bin/bash
 
-strip_leading() {
-  sed -e 's/https:\/\/github.com\/exercism\/cli\/releases\/tag\///'
+fail() {
+  echo "$@" >&2
+  exit 1
+}
+
+setup_curl() {
+  head() {
+    curl --head --silent "$@"
+  }
+  get() {
+    curl --insecure --location --remote-name "$@"
+  }
+}
+
+setup_wget() {
+  head() {
+    wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
+  }
+  get() {
+    wget "$@"
+  }
+}
+
+filter_tag() {
+  xargs basename
+}
+
+filter_location() {
+  awk '/Location:/{print $2}' | tr -d '\r' 
 }
 
 ask_github() {
-  curl --head --silent https://github.com/exercism/cli/releases/latest
+  head https://github.com/exercism/cli/releases/latest
 }
 
 latest() {
-  ask_github | grep Location | awk '{print $2}' | strip_leading | tr -d '\r'
+  ask_github | filter_location | filter_tag
 }
 
-VERSION="$(latest)"
+archive_os() {
+  case "$(uname -s)" in
+  Darwin) echo "darwin" ;;
+  *)      echo "linux" ;;
+  esac
+}
 
-if [ "$(uname -s)" == "Darwin" ]; then
-  OS="darwin"
-else
-  OS="linux"
-fi
+archive_arch() {
+  case "$(uname -m)" in
+  x86_64) echo "amd64" ;;
+  *)      echo "i386" ;;
+  esac
+}
 
-if [ "$(uname -m)" == "x86_64" ]; then
-  FILE="exercism-$OS-amd64.tgz"
-else
-  FILE="exercism-$OS-i386.tgz"
-fi
-
-cd /tmp
-
-URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
+archive() {
+  echo "exercism-$(archive_os)-$(archive_arch).tgz"
+}
 
 if type curl &>/dev/null; then
-  curl -LOk $URL
+  setup_curl
 elif type wget &>/dev/null; then
-  wget $URL
+  setup_wget
 else
-  echo "error: please install \`curl\` or \`wget\` and try again" >&2
-  exit 1
+  fail "error: please install \`curl\` or \`wget\` and try again"
 fi
 
-if [ $? != 0 ]; then
-  echo "Unable to download $URL"
-  exit 1
-fi
+VERSION="$(latest)"
+FILE="$(archive)"
+URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
+cd /tmp
+get $URL ||
+fail "Unable to download $URL"
 
-tar zxvf $FILE
-
-if [ $? != 0 ]; then
-  echo "Failed to unpack $FILE"
-  exit 1
-fi
+tar zxvf $FILE ||
+fail "Failed to unpack $FILE"
 
 if [ -d /usr/local/bin ]; then
   if [ -w /usr/local/bin ]; then
