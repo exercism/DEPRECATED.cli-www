@@ -2,6 +2,7 @@ use Rack::Static,
   :urls => ["/images", "/css", "/fonts"],
   :root => "public"
 
+
 run lambda { |env|
   [
     200,
@@ -13,4 +14,3 @@ run lambda { |env|
   ]
 }
 
-run Rack::File.new("public")
