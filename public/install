@@ -4,6 +4,10 @@ filter_tag() {
   xargs basename
 }
 
+filter_location() {
+  grep Location | awk '{print $2}' | tr -d '\r' 
+}
+
 curl_head() {
   curl --head --silent "$@"
 }
@@ -17,7 +21,7 @@ ask_github() {
 }
 
 latest() {
-  ask_github | grep Location | awk '{print $2}' | filter_tag | tr -d '\r'
+  ask_github | filter_location | filter_tag
 }
 
 VERSION="$(latest)"
