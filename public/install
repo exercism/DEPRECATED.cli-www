@@ -4,8 +4,12 @@ filter_tag() {
   xargs basename
 }
 
+head() {
+  curl --head --silent "$@"
+}
+
 ask_github() {
-  curl --head --silent https://github.com/exercism/cli/releases/latest
+  head https://github.com/exercism/cli/releases/latest
 }
 
 latest() {
