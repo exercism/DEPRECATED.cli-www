@@ -44,4 +44,4 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-gunzip -c $FILE | tar xvf - && mv exercism /usr/local/bin
+tar zxvf $FILE && mv exercism /usr/local/bin
