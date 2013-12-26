@@ -1,19 +1,23 @@
 #!/bin/bash
 
+setup_curl() {
+  head() {
+    curl --head --silent "$@"
+  }
+}
+
+setup_wget() {
+  head() {
+    wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
+  }
+}
+
 filter_tag() {
   xargs basename
 }
 
 filter_location() {
   awk '/Location:/{print $2}' | tr -d '\r' 
-}
-
-curl_head() {
-  curl --head --silent "$@"
-}
-
-wget_head() {
-  wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
 }
 
 ask_github() {
