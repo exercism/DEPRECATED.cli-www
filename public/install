@@ -4,8 +4,12 @@ filter_tag() {
   xargs basename
 }
 
-head() {
+curl_head() {
   curl --head --silent "$@"
+}
+
+wget_head() {
+  wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
 }
 
 ask_github() {
