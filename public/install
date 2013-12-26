@@ -26,20 +26,24 @@ latest() {
 
 VERSION="$(latest)"
 
-archive() {
+archive_os() {
   if [ "$(uname -s)" == "Darwin" ]; then
-    OS="darwin"
+    echo "darwin"
   else
-    OS="linux"
+    echo "linux"
   fi
+}
 
+archive_arch() {
   if [ "$(uname -m)" == "x86_64" ]; then
-    FILE="exercism-$OS-amd64.tgz"
+    echo "amd64"
   else
-    FILE="exercism-$OS-i386.tgz"
+    echo "i386"
   fi
-  
-  echo $FILE
+}
+
+archive() {
+  echo "exercism-$(archive_os)-$(archive_arch).tgz"
 }
 
 FILE="$(archive)"
