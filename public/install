@@ -23,12 +23,8 @@ setup_wget() {
   }
 }
 
-filter_tag() {
-  xargs basename
-}
-
 filter_location() {
-  awk '/Location:/{print $2}' | tr -d '\r' 
+  awk -v FS=/ '/Location:/{print $NF}' | tr -d '\r' 
 }
 
 ask_github() {
@@ -36,7 +32,7 @@ ask_github() {
 }
 
 latest() {
-  ask_github | filter_location | filter_tag
+  ask_github | filter_location
 }
 
 archive_os() {
