@@ -14,3 +14,15 @@ run lambda { |env|
   ]
 }
 
+map '/install' do
+  run lambda { |env|
+    [
+      200,
+      {
+        'Content-Type' => 'text/plain',
+        'Cache-Control' => 'public, max-age=86400'
+      },
+      File.open('public/install', File::RDONLY)
+    ]
+  }
+end
