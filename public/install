@@ -31,7 +31,7 @@ cd /tmp
 URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
 
 if type curl &>/dev/null; then
-  curl -O $URL
+  curl -LOk $URL
 elif type wget &>/dev/null; then
   wget $URL
 else
