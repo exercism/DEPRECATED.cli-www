@@ -5,7 +5,7 @@ filter_tag() {
 }
 
 filter_location() {
-  grep Location | awk '{print $2}' | tr -d '\r' 
+  awk '/Location:/{print $2}' | tr -d '\r' 
 }
 
 curl_head() {
