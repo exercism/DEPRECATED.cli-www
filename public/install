@@ -1,105 +1,122 @@
-#!/bin/bash
+#!/bin/sh
+# TODO:
+# * pull up defaults so usage can show them
+# * pull up functions to work doesn't start in the middle
+# * check that PATH contains INSTALL_DIR
+# * consider all the words
+
+usage() {
+  cat <<-USAGE
+Usage: ${0##*/} [<option>...] [<path>]
+Install exercism client to <path>. Default:
+  * determined interactively if possible
+  * /usr/local/bin if run as root
+  * $HOME/bin otherwise
+Options:
+  -v <version>             Install client version <version>.      Default: latest
+  -o <operating system>    Install client for <operating system>. Default: guessed
+  -a <architecture>        Install client for <architecture>.     Default: guessed
+USAGE
+}
 
 fail() {
-  echo "$@" >&2
+  echo "${0##*/}: $@" >&2
   exit 1
 }
 
-setup_curl() {
-  head() {
-    curl --head --silent "$@"
-  }
-  get() {
-    curl --insecure --location --remote-name "$@"
-  }
+while getopts o:a:v:h OPTNAME; do
+  case $OPTNAME in
+    o) CLI_OS=$OPTARG;;
+    a) CLI_ARCH=$OPTARG;;
+    v) CLI_VERSION=$OPTARG;;
+    h) usage; exit;;
+    *) usage >&2; exit 64;;
+  esac
+done
+shift $(expr $OPTIND - 1)
+
+INSTALL_DIR=$1; shift
+
+if [ $# -ne 0 ]; then
+  usage >&2
+  exit 64
+fi
+
+# TODO: this is a mess
+if [ -z "$INSTALL_DIR" ]; then
+  if [ "$UID" -eq 0 ]; then
+    DEFAULT_DIR=/usr/local/bin
+  else
+    DEFAULT_DIR=$HOME/bin
+  fi
+  if [ -t 0 ]; then
+    read -p "install client into: [$DEFAULT_DIR] " INSTALL_DIR
+    if [ -z "$INSTALL_DIR" ]; then
+      INSTALL_DIR=$DEFAULT_DIR
+    fi
+  else
+    INSTALL_DIR=$DEFAULT_DIR
+  fi
+fi
+
+test -d "$INSTALL_DIR" ||
+mkdir -p "$INSTALL_DIR" ||
+fail "unable to create installation directory $INSTALL_DIR"
+
+test -w "$INSTALL_DIR" ||
+fail "unable to write installation directory $INSTALL_DIR"
+
+if   command -v curl >/dev/null; then DOWNLOADER=curl
+elif command -v wget >/dev/null; then DOWNLOADER=wget
+else fail "missing dependencies, please install one of: curl, wget"
+fi
+
+extract() {
+  tar xz -C "$1" exercism ||
+  fail "failed to extract exercism"
 }
 
-setup_wget() {
-  head() {
-    wget --server-response --quiet --output-document=/dev/null "$@" 2>&1
-  }
-  get() {
-    wget "$@"
-  }
+download() {
+  case "$DOWNLOADER" in
+    curl) curl --insecure --location "$@";;
+    wget) wget --output-document=- "$@";;
+  esac ||
+  fail "failed to download $@"
 }
 
-filter_location() {
-  awk -v FS=/ '/Location:/{print $NF}' | tr -d '\r' 
+follow() {
+  case "$DOWNLOADER" in
+    curl) curl --head --silent "$@";;
+    wget) wget --server-response --quiet --output-document=/dev/null "$@" 2>&1;;
+  esac | tr -d '\r'
 }
 
-ask_github() {
-  head https://github.com/exercism/cli/releases/latest
-}
-
-latest() {
-  ask_github | filter_location
-}
-
-archive_os() {
+guess_cli_os() {
   case "$(uname -s)" in
-  Darwin) echo "darwin" ;;
-  *)      echo "linux" ;;
+    Darwin) echo "darwin";;
+    *)      echo "linux";;
   esac
 }
 
-archive_arch() {
+guess_cli_arch() {
   case "$(uname -m)" in
-  x86_64) echo "amd64" ;;
-  *)      echo "386" ;;
+    x86_64) echo "amd64";;
+    *)      echo "386";;
   esac
 }
 
-archive() {
-  echo "exercism-$(archive_os)-$(archive_arch).tgz"
+latest_cli_version() {
+  follow https://github.com/exercism/cli/releases/latest | filter_version_tag
 }
 
-if type curl &>/dev/null; then
-  setup_curl
-elif type wget &>/dev/null; then
-  setup_wget
-else
-  fail "error: please install \`curl\` or \`wget\` and try again"
-fi
+filter_version_tag() {
+  awk -v FS=/ '/Location:/{print $NF}'
+}
 
-VERSION="$(latest)"
-FILE="$(archive)"
-URL=https://github.com/exercism/cli/releases/download/$VERSION/$FILE
-cd /tmp
-get $URL ||
-fail "Unable to download $URL"
+: ${CLI_OS:=$(guess_cli_os)}
+: ${CLI_ARCH:=$(guess_cli_arch)}
+: ${CLI_VERSION:=$(latest_cli_version)}
 
-tar zxvf $FILE ||
-fail "Failed to unpack $FILE"
+URL="https://github.com/exercism/cli/releases/download/$CLI_VERSION/exercism-$CLI_OS-$CLI_ARCH.tgz"
 
-if [ -d /usr/local/bin ]; then
-  if [ -w /usr/local/bin ]; then
-    mv exercism /usr/local/bin/
-  fi
-fi
-
-if [ ! -f /usr/local/bin/exercism ]; then
-  # OK. Trying something else.
-  # This might be considered slightly impolite.
-  if [ ! -d $HOME/bin ]; then
-    mkdir $HOME/bin
-  fi
-  mv exercism $HOME/bin/
-
-  if [ $? != 0 ]; then
-    echo "Unable to figure out where to put the binary"
-    echo "Please submit an issue so we can improve the script: https://github.com/exercism/cli-www/issues"
-    exit 1
-  fi
-fi
-
-if [ ! $(echo $PATH | grep "$HOME/bin") ]; then
-  if [ ! $(echo $PATH | grep "~/bin") ]; then
-    # Add ~/bin to the PATH
-    if [ -f $HOME/.bash_profile ]; then
-      echo 'export PATH=$HOME/bin:$PATH' >> $HOME/.bash_profile
-    fi
-    if [ -f $HOME/.zshrc ]; then
-      echo 'export PATH=$HOME/bin:$PATH' >> $HOME/.zshrc
-    fi
-  fi
-fi
+download "$URL" | extract "$INSTALL_DIR"
