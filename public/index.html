@@ -57,7 +57,8 @@
   $ curl http://cli.exercism.io/install | sh
 </pre>
 
-            <p>If you know where you'd like to put the binary, you can specify it up front:</p>
+            <p>By default, the installer will try to put it in `/usr/local/bin/` or `$HOME/bin`.</p>
+            <p>If you'd like it to live somewhere else, you can specify it up front:</p>
 
 <pre class="content-code">
   $ curl http://cli.exercism.io/install | DIR=/path/to/bin sh
@@ -107,6 +108,41 @@
   $ exercism submit path/to/file.ext
 </pre>
             <p>You only need to submit the code you wrote to solve the exercise, not the test suite that you were given. At the moment each exercise must be solved in a single file.</p>
+          </div>
+        </article>
+
+        <article class="last">
+          <div class="container container-narrow">
+            <h2>Extras</h2>
+            <h3>Bash completions</h3>
+
+            <p>If you use a bash shell, you can use our CLI bash-completion script.</p>
+            <p>First download the script</p>
+
+<pre class="content-code">
+  $ mkdir -p ~/.config/exercism/
+  $ curl http://cli.exercism.io/bash_completions > ~/.config/exercism/exercism_completion.bash
+</pre>
+
+            <p>Load up the completion in your .bashrc, .bash_profile or .profile by adding the following snippet</p>
+
+<pre class="content-code">
+  if [ -f ~/.config/exercism/exercism_completion.bash ]; then
+    . ~/.config/exercism/exercism_completion.bash
+  fi
+</pre>
+
+            <p>With this in place, you should be able to type<p>
+
+<pre class="content-code">
+  exercism s<tab>
+</pre>
+            <p>and autcomplete will give you</p>
+
+<pre class="content-code">
+  exercism submit
+</pre>
+
           </div>
         </article>
 
