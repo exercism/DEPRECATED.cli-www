@@ -141,13 +141,15 @@ check_directory_in_path() {
 }
 
 install() {
-  download "https://github.com/exercism/cli/releases/download/$VERSION/exercism-$OS-$ARCH.tgz" |
-  extract "$DIR"
+  EXERCISM_FILES="https://github.com/exercism/cli/releases/download/$VERSION/exercism-$OS-$ARCH.tgz"
+  echo "\nDownloading $EXERCISM_FILES...\n"
+  download $EXERCISM_FILES| extract "$DIR"
+  echo "Installed exercism to $DIR"
 }
 
 download() {
   case "$DOWNLOADER" in
-    curl) curl --location "$@";;
+    curl) curl -s --location "$@";;
     wget) wget --output-document=- "$@";;
   esac ||
   fail "failed to download $*"
