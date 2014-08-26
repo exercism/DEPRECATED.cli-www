@@ -2,6 +2,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     psych (2.0.3)
+    puma (2.9.0)
+      rack (>= 1.1, < 2.0)
     rack (1.5.2)
 
 PLATFORMS
@@ -9,4 +11,5 @@ PLATFORMS
 
 DEPENDENCIES
   psych
+  puma
   rack
