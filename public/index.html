@@ -98,11 +98,11 @@
             <h2>Basic Usage</h2>
 
             <h3>Configuration</h3>
-            <p>You need to tell the gem who you are and where to put the exercises that it will download:</p>
+            <p>You need to tell the tool who you are:</p>
 <pre class="content-code">
-  $ exercism login
+  $ exercism configure --key=<your exercism API key>
 </pre>
-            <p>This will ask you for your github username, your exercism API key, and the location on your filesystem where you would like the exercises to be downloaded to.</p>
+<p>By default, it will put exercism problems in <code>~/exercism</code>. If you wish to override this, pass the <kbd>--dir=/path/to/dir</kbd> option to the <code>configure</code> command.</p>
 
             <p>Your exercism API key can be found on <a href="http://exercism.io/account">your account page</a>.</p>
 
@@ -189,6 +189,11 @@
   $ which exercism
 </pre>
 
+            <p>If you have version 1.7.0 or greater, run the debug command and email the output to <a href="mailto:kytrinyx@exercism.io">kytrinyx@exercism.io</a>.</p>
+
+<pre class="content-code">
+  $ exercism debug
+</pre>
           </div>
         </article>
 
