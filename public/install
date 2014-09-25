@@ -54,15 +54,15 @@ default_dir() {
 
 default_os() {
   case "$(uname -s)" in
-    Darwin) echo "darwin";;
+    Darwin) echo "mac";;
     *)      echo "linux";;
   esac
 }
 
 default_arch() {
   case "$(uname -m)" in
-    x86_64) echo "amd64";;
-    *)      echo "386";;
+    x86_64) echo "64bit";;
+    *)      echo "32bit";;
   esac
 }
 
