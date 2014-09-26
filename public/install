@@ -60,10 +60,7 @@ default_os() {
 }
 
 default_arch() {
-  case "$(uname -m)" in
-    x86_64) echo "64bit";;
-    *)      echo "32bit";;
-  esac
+  echo "$(getconf LONG_BIT)bit"
 }
 
 latest_version() {
