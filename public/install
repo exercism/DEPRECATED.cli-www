@@ -38,7 +38,7 @@ setup_defaults() {
   DEFAULT_DIR="$(default_dir)"
   DEFAULT_OS="$(default_os)"
   DEFAULT_ARCH="$(default_arch)"
-  DEFAULT_VERSION="$(latest_version)"
+  DEFAULT_VERSION="$(latest_version)" || exit $?
 }
 
 default_dir() {
