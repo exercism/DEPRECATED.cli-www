@@ -64,7 +64,8 @@ default_arch() {
 }
 
 latest_version() {
-  follow https://github.com/exercism/cli/releases/latest | filter_version_tag
+  follow https://github.com/exercism/cli/releases/latest | filter_version_tag ||
+  fail 'Failed to get latest version. Check your internet connection.'
 }
 
 follow() {
