@@ -38,7 +38,7 @@ setup_defaults() {
   DEFAULT_DIR="$(default_dir)"
   DEFAULT_OS="$(default_os)"
   DEFAULT_ARCH="$(default_arch)"
-  DEFAULT_VERSION="$(latest_version)"
+  DEFAULT_VERSION="$(latest_version)" || exit $?
 }
 
 default_dir() {
@@ -64,7 +64,8 @@ default_arch() {
 }
 
 latest_version() {
-  follow https://github.com/exercism/cli/releases/latest | filter_version_tag
+  follow https://github.com/exercism/cli/releases/latest | filter_version_tag ||
+  fail 'Failed to get latest version. Check your internet connection.'
 }
 
 follow() {
