@@ -140,7 +140,7 @@ check_directory_in_path() {
 
 install() {
   EXERCISM_FILES="https://github.com/exercism/cli/releases/download/$VERSION/exercism-$OS-$ARCH.tgz"
-  echo "\nDownloading $EXERCISM_FILES...\n"
+  echo -e "\nDownloading $EXERCISM_FILES...\n"
   download $EXERCISM_FILES | extract "$DIR"
   [ $? -eq 0 ] && echo "Installed exercism to $DIR"
 }
