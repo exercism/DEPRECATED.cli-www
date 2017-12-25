@@ -15,23 +15,23 @@ _exercism() {
              help:"Shows a list of commands or help for one command")
 
     _arguments -s -S \
-        {-c,--config}"[path to config file]"    \
+        {-c,--config}"[path to config file]:file:_files"    \
         {-d,--debug}"[turn on verbose logging]" \
         {-h,--help}"[show help]"                \
         {-v,--version}"[print the version]"     \
         '(-): :->command'                       \
-        '*: :'                                  \
+        '(-)*:: :->option-or-argument'          \
         && return 0;
 
     case $state in
         (command)
             _describe 'commands' options ;;
-        *)
-        case $words[2] in
-            *submit)
-                _files
-                ;;
-        esac
+        (option-or-argument)
+            case $words[1] in
+                s*)
+                    _files
+                    ;;
+            esac
     esac
 }
 
